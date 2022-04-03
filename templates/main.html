@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<script type=text/javascript>
+    function func(id, type){
+    $.ajax({
+        url : "func_run", // the endpoint
+        type : "GET", // http method
+        data : { par_1 : id,
+                 par_2 : document.getElementById(id).checked,
+                 par_3 : type }, // data sent with the request
+        // for successful response
+        success : function(json) {
+            console.log("success"); // another sanity check
+            },
+
+        // for non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText); // provide info about the error to the console
+            }
+    });
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+<script>
+function alertreg(time){
+    alert('Сначала нужно авторизоваться!');
+}
+function remove(id,type) {
+    func(id,type)
+    window.location.reload()
+}
+function add_sale(id, type) {
+    func(id,`sale ${document.getElementById(`sale ${String(id)}`).value}`)
+    window.location.reload()
+}
+</script>
+
+<p align="center" style="font-size:35px">Категории</p>
+<p align="center">
+    {% for g in cats %}
+    <a class="btn btn-outline-success" href="/categories/{{cats.index(g) + 1}}">{{g}}</a>
+    {% endfor %}
+</p>
+
+<h1 style="text-align: center;">Список всех товаров</h1>
+
+{% for item in goods %}
+<div class='contract-card'>
+    {% if role == "admin" %}
+        <button class="btn btn-success" onclick="add_sale({{item.id}}, 'add_sale')">Add sale</button>
+        <input id="sale {{item.id}}">
+    {% endif %}
+    <img style="margin-left: auto; margin-right: auto; margin-bottom: 10px;" src={{item.image}} class='card-img' alt="" width="150" height="150">
+        <a style="font-size: 1.3rem; width:100%; font-weight: bold;" class="prod_url" href="/product/{{ item.id }}">{{item.title}}</a><h4 class="tx">{{item.category}}</h4>
+        <h4 style="width: 100%;">{{item.cost}} баллов.</h4><br>
+        <h5>{% if item.sale != None %}{% if item.sale > 0%}Скидка: {{item.sale}}%{%endif%}{%endif%}</h5>
+    <div style="width: 100%; margin-bottom: 15px;">
+    {% for j in range(item.rate) %}
+        <img align="center" src=/static/img/i2.png alt="" width="25" height="25"
+             class="d-inline-block align-text-top">
+        {% endfor %}
+        {% if 5 - item.rate > 0 %}
+        {% for j in range(5 - item.rate) %}
+        <img align="center" src=/static/img/i.png alt="" width="25" height="25"
+             class="d-inline-block align-text-top">
+        {% endfor %}
+    {% endif %}
+    </div>
+    <br>
+
+    <div class="checks" align="right">
+        <div>
+            <div class="form-check form-check-inline">
+                {% if current_user.is_authenticated %}
+                {% if item.id in favs %}
+                <input type="checkbox" class="btn-check" id="{{item.id}}" onchange="func(id, 1)"
+                       checked>
+                <label style="margin: 10px;"class="btn btn-outline-success" for="{{item.id}}">В избранном</label>
+                {% else %}
+                <input type="checkbox" class="btn-check" id="{{item.id}}" onchange="func(id, 1)">
+                <label style="margin: 10px;"class="btn btn-outline-success" for="{{item.id}}">В избранное</label>
+                {% endif %}
+
+                {% if item.id in ords %}
+                <input type="checkbox" class="btn-check" id="{{item.id + 100}}" onchange="func(id, 2)"
+                       checked>
+                <label style="margin: 10px;"class="btn btn-outline-success" for="{{item.id + 100}}">В корзине</label>
+                {% else %}
+                <input type="checkbox" class="btn-check" id="{{item.id + 100}}" onchange="func(id, 2)">
+                <label style="margin: 10px;"class="btn btn-outline-success" for="{{item.id + 100}}">В корзину</label>
+                {% endif %}
+                {% else %}
+                <input type="checkbox" class="btn-check" id="{{item.id}}" onchange="alertreg()">
+                <label style="margin: 10px;"class="btn btn-outline-success" for="{{item.id}}">В избранное</label>
+                <input type="checkbox" class="btn-check" id="{{item.id + 100}}" onchange="alertreg()">
+                <label style="margin: 10px;"class="btn btn-outline-success" for="{{item.id + 100}}">В корзину</label>
+                {% endif %}
+                    {% if role == "admin" %}
+                        <button class="btn btn-danger" onclick="remove({{item.id}}, 'remove')">Delete</button>
+                    {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+{% endblock %}
