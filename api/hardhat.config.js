@@ -9,7 +9,7 @@ module.exports = {
    defaultNetwork: "ropsten",
    networks: {
       hardhat: {},
-      ropsten: {
+      rinkeby: {
          url: API_URL,
          accounts: [`0x${METAMASK_PRIVATE_KEY}`]
       }

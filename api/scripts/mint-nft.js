@@ -5,7 +5,6 @@ const alchemyWeb3 = createAlchemyWeb3(API_URL);
 const contract = require("../artifacts/contracts/OsunRiverNFT.sol/TorNFT.json");
 const METAMASK_PUBLIC_KEY = process.env.METAMASK_PUBLIC_KEY;
 const METAMASK_PRIVATE_KEY = process.env.METAMASK_PRIVATE_KEY;
-
 const contractAddress = "0x515ad767901935daf58ea184013b161aee148b4f"; // the hash of the smart contract to be used in minting this NFT
 const nftContract = new alchemyWeb3.eth.Contract(contract.abi, contractAddress);
 
