@@ -5,7 +5,7 @@ const alchemyWeb3 = createAlchemyWeb3(API_URL);
 const contract = require("../artifacts/contracts/OsunRiverNFT.sol/TorNFT.json");
 const METAMASK_PUBLIC_KEY = process.env.METAMASK_PUBLIC_KEY;
 const METAMASK_PRIVATE_KEY = process.env.METAMASK_PRIVATE_KEY;
-const contractAddress = "0x515ad767901935daf58ea184013b161aee148b4f"; // the hash of the smart contract to be used in minting this NFT
+const contractAddress = "0x68512832bDD76E93c421Ae2F2bBDeC9aF401bB44"; // the hash of the smart contract to be used in minting this NFT
 const nftContract = new alchemyWeb3.eth.Contract(contract.abi, contractAddress);
 
 async function mintNFT(tokenURI) {
@@ -23,7 +23,7 @@ async function mintNFT(tokenURI) {
     gas: 1000000, // fee estimate to complete the transaction
 
     data: nftContract.methods
-      .createNFT("0x851C31b3C21e3c1D6956b0312686F8e16b434316", tokenURI)
+      .createNFT("0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621", tokenURI)
       .encodeABI(), // call the createNFT function from our OsunRiverNFT.sol file
   };
 
