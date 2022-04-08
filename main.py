@@ -12,6 +12,7 @@ from data.goods import Goods
 from data.users import User
 from data.association import Association
 from data import db_session
+from nft.api import CreateNFT, GetNFTs
 
 # from forms.check import ChecksForm  # new
 
@@ -171,6 +172,7 @@ def index():
         return redirect('/search_results')
     db_sess = db_session.create_session()
     goods = db_sess.query(Goods)
+    print(GetNFTs("0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621"))
     # form4 = FavsForm()
     # form4 = ChecksForm()  # new
     # if form4.validate_on_submit():
@@ -249,10 +251,10 @@ def add():
         form3 = AddForm()
         cats = get_category_choice()
         form3.category.choices = cats
-        if form3.validate_on_submit():
-            from nft.api import CreateNFT
-            print("A")
 
+        if form3.validate_on_submit() and (
+                (form3.category.data == "Выберети категорию" and form3.new_category.data != "") or (
+                form3.category.data != "Выберети категорию" and form3.new_category.data == "")):
             caty = ""
             if form3.category.data == "Выберети категорию":
                 caty = form3.new_category.data
