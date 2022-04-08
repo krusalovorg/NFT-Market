@@ -1,17 +1,24 @@
-async function main() {
+const hre = require("hardhat");
+
+const ethers = hre.ethers
+
+
+module.exports = async function Deploy() {
     const [deployer] = await ethers.getSigners();
     console.log("Deploying contracts with the account:", deployer.address);
     console.log("Account balance:", (await deployer.getBalance()).toString());
-    const TOR = await ethers.getContractFactory("TorNFT");
+    const TOR = await ethers.getContractFactory("MarketNFT");
 
     // Start deployment, returning a promise that resolves to a contract object
     const tor = await TOR.deploy();
     console.log("Contract deployed to address:", tor.address);
+
+    return {status: true, contract: tor.address}
  }
 
- main()
+ /*main()
    .then(() => process.exit(0))
    .catch(error => {
      console.error(error);
      process.exit(1);
-   });
+   });*/

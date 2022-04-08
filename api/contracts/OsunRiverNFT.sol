@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 // Accessing the Ownable method ensures that only the creator of this Smart contract can interact with it
-contract TorNFT is ERC721, Ownable {
+contract MarketNFT is ERC721, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 

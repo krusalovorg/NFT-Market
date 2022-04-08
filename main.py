@@ -249,6 +249,26 @@ def add():
         form3 = AddForm()
         cats = get_category_choice()
         form3.category.choices = cats
+        if form3.validate_on_submit():
+            from nft.api import CreateNFT
+            print("A")
+
+            caty = ""
+            if form3.category.data == "Выберети категорию":
+                caty = form3.new_category.data
+            else:
+                caty = form3.category.data
+
+            CreateNFT(form3.title.data,
+                   "0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621",
+                   form3.description.data,
+                   "https://ipfs.io/ipfs/Qmbs9mANDvu7bs3Nw7aFMGxAnAPces5r1UazwpyhfePUqr",
+                   1,
+                   form3.cost.data,
+                   caty)
+            print("CREATE")
+            return redirect('/add')
+
         if form3.validate_on_submit() and (
                 (form3.category.data == "Выберети категорию" and form3.new_category.data != "") or (
                 form3.category.data != "Выберети категорию" and form3.new_category.data == "")):

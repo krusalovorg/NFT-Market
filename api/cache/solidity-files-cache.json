@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\Egor\\Documents\\GitHub\\NFT-Market\\api\\contracts\\OsunRiverNFT.sol": {
-      "lastModificationDate": 1648906490555,
-      "contentHash": "4a4d173fbdf86ef26d0e0474d92b61f0",
+      "lastModificationDate": 1649430997952,
+      "contentHash": "9ed85ac24abd7c20db33326fdfa1af10",
       "sourceName": "contracts/OsunRiverNFT.sol",
       "solcConfig": {
         "version": "0.7.3",
@@ -37,7 +37,7 @@
         "^0.7.3"
       ],
       "artifacts": [
-        "TorNFT"
+        "MarketNFT"
       ]
     },
     "C:\\Users\\Egor\\Documents\\GitHub\\NFT-Market\\api\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\ERC721.sol": {
