@@ -1,0 +1,24 @@
+{
+  "name": "nft-market",
+  "version": "1.0.0",
+  "description": "nft market",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krusalovorg/NFT-Market.git"
+  },
+  "author": "krusalovorg && baoobab",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/krusalovorg/NFT-Market/issues"
+  },
+  "homepage": "https://github.com/krusalovorg/NFT-Market#readme",
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "pinata": "^0.0.1",
+    "process": "^0.11.10"
+  }
+}

@@ -14,16 +14,37 @@ const METAMASK_PUBLIC_KEY = process.env.METAMASK_PUBLIC_KEY;
 const METAMASK_PRIVATE_KEY = process.env.METAMASK_PRIVATE_KEY;
 //const contractAddress = "0x68512832bDD76E93c421Ae2F2bBDeC9aF401bB44";
 
-module.exports = async function mintNFT(contractAddress, tokenURI, newOwner) {
-  // get the nonce - nonce is needed for security reasons. It keeps track of the number of
-  // transactions sent from your address and prevents replay attack.
+module.exports = async function LoadNFT(tokenURI, newOwner) {
+  const [deployer] = await ethers.getSigners();
+  const acc_balance = await deployer.getBalance();
+
+  console.log("Deploying contracts with the account:", deployer.address);
+
+  if (acc_balance == 0) {
+    return {status: false, contract: null, error: "no_balance:0"}
+  }
+
+  console.log("Account balance:", (await deployer.getBalance()).toString());
+
+  const NFT = await ethers.getContractFactory("MarketNFT");
+
+  // Start deployment, returning a promise that resolves to a contract object
+  const tor = await NFT.deploy();
+  console.log("Contract deployed to address:", tor.address);
+
+  const contractAddress = `${tor.address}`
+
+  //return {status: true, contract: tor.address}
 
   const nftContract = new alchemyWeb3.eth.Contract(contract.abi, contractAddress);  
 
-  const nonce = await alchemyWeb3.eth.getTransactionCount(
+  const nonce =
+  '0x' + (await alchemyWeb3.eth.getTransactionCount(METAMASK_PUBLIC_KEY) + 1).toString(16)
+
+  /*const nonce = await alchemyWeb3.eth.getTransactionCount(
     METAMASK_PUBLIC_KEY,
     "latest"
-  );
+  );*/
 
   const tx = {
     from: METAMASK_PUBLIC_KEY, // your metamask public key
@@ -43,6 +64,7 @@ module.exports = async function mintNFT(contractAddress, tokenURI, newOwner) {
   try {
     const result = await signPromise;
     console.log("1:",result)
+
     const send_signed = await alchemyWeb3.eth.sendSignedTransaction(result.rawTransaction)
     console.log(send_signed)
     return {status: true, contract: send_signed}
@@ -50,34 +72,8 @@ module.exports = async function mintNFT(contractAddress, tokenURI, newOwner) {
     console.log(e)
     return {status: false, contract: null, error: e}
   }
-
-  return signPromise
-    .then((signedTx) => {
-      alchemyWeb3.eth.sendSignedTransaction(
-        signedTx.rawTransaction,
-        function (err, hash) {
-          if (!err) {
-            console.log(
-              "The hash of your transaction is: ",
-              hash,
-              "\nCheck Alchemy's Mempool to view the status of your transaction!"
-            );
-            return {status: true, contract: hash}
-          } else {
-            console.log(
-              "Something went wrong when submitting your transaction:",
-              err
-            );
-            return {status: false, contract: null, error: err}
-          }
-        }
-      );
-    })
-    .catch((err) => {
-      console.log(" Promise failed:", err);
-      return {status: false, contract: null, error: err}
-    });
-    return {status: false, contract: null, error: null}
 }
 
-//mintNFT("https://ipfs.io/ipfs/Qmbs9mANDvu7bs3Nw7aFMGxAnAPces5r1UazwpyhfePUqr") // pass the CID to the JSON file uploaded to Pinata
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}

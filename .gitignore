@@ -2,3 +2,5 @@
 .pyc
 /.idea
 .env
+/node_modules
+/static/img

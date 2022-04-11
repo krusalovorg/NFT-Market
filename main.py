@@ -12,7 +12,7 @@ from data.goods import Goods
 from data.users import User
 from data.association import Association
 from data import db_session
-from nft.api import CreateNFT, GetNFTs
+from nft.api import CreateNFT, GetNFTs, uploadImageNFT
 
 # from forms.check import ChecksForm  # new
 
@@ -261,14 +261,20 @@ def add():
             else:
                 caty = form3.category.data
 
-            CreateNFT(form3.title.data,
-                   "0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621",
-                   form3.description.data,
-                   "https://ipfs.io/ipfs/Qmbs9mANDvu7bs3Nw7aFMGxAnAPces5r1UazwpyhfePUqr",
-                   1,
-                   form3.cost.data,
-                   caty)
-            print("CREATE")
+            file = request.files["file"]
+            filename = file.filename
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+            image_hash = uploadImageNFT("static/img/"+filename)
+            if image_hash:
+                CreateNFT(form3.title.data,
+                       "0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621",
+                       form3.description.data,
+                       "https://ipfs.io/ipfs/"+image_hash,
+                       1,
+                       form3.cost.data,
+                       caty)
+                print("CREATE")
             return redirect('/add')
 
         if form3.validate_on_submit() and (
