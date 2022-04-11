@@ -22,7 +22,7 @@ router.post('/create-nft', async function(req, res) {
             console.log("NFT создан успешно:", result.contract)
             return res.json({"status":"true"})
         } else {
-            console.log("Контракт не создан")
+            console.log("Контракт не создан:",result)
         }
 
         /*const deploy_contract = await deploy()
