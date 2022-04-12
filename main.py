@@ -123,7 +123,7 @@ def func_run():
         if current_user.is_authenticated and current_user.role == "admin":
             print("delete", x, y, z)
             db_sess = db_session.create_session()
-            item = db_sess.query(NFT).filter(Goods.id == int(x)).first()
+            item = db_sess.query(NFT).filter(NFT.id == int(x)).first()
             if item:
                 db_sess.delete(item)
 
@@ -349,7 +349,7 @@ def pay():
     form2 = SearchForm()
     if form2.validate_on_submit():
         db_sess = db_session.create_session()
-        goods = db_sess.query(Goods)
+        goods = db_sess.query(NFT)
         for i in goods:
             if str(form2.ttle.data).lower() in str(i.title).lower():
                 res.append(i.id)
@@ -383,14 +383,14 @@ def favorites():
     form = SearchForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        goods = db_sess.query(Goods)
+        goods = db_sess.query(NFT)
         for i in goods:
             if str(form.ttle.data).lower() in str(i.title).lower():
                 res.append(i.id)
         return redirect('/search_results')
 
     db_sess = db_session.create_session()
-    goods = db_sess.query(Goods)
+    goods = db_sess.query(NFT)
     return render_template("favorites.html", title='Избранное', goods=goods,
                            favs=get_favs(), form2=form)
 
@@ -403,7 +403,7 @@ def search_results():
     if form.validate_on_submit():
         res.clear()
         db_sess = db_session.create_session()
-        goods = db_sess.query(Goods)
+        goods = db_sess.query(NFT)
         for i in goods:
             if str(form.ttle.data).lower() in str(i.title).lower():
                 res.append(i.id)
@@ -411,7 +411,7 @@ def search_results():
 
     # form.button.data true - false
     db_sess = db_session.create_session()
-    goods = db_sess.query(Goods)
+    goods = db_sess.query(NFT)
 
     return render_template('search_results.html', title='Результаты поиска',
                            res=res, form2=form,
@@ -426,14 +426,14 @@ def cat(r):
     form = SearchForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        goods = db_sess.query(Goods)
+        goods = db_sess.query(NFT)
         for i in goods:
             if str(form.ttle.data).lower() in str(i.title).lower():
                 res.append(i.id)
         return redirect('/search_results')
 
     db_sess = db_session.create_session()
-    goods = db_sess.query(Goods)
+    goods = db_sess.query(NFT)
     col = 0
     for i in goods:
         if i.category == categories[r - 1]:
@@ -450,14 +450,14 @@ def product(r):
     form = SearchForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        goods = db_sess.query(Goods)
+        goods = db_sess.query(NFT)
         for i in goods:
             if str(form.ttle.data).lower() in str(i.title).lower():
                 res.append(i.id)
         return redirect('/search_results')
 
     db_sess = db_session.create_session()
-    goods = db_sess.query(Goods)
+    goods = db_sess.query(NFT)
     for i in goods:
         if i.id == r:
             tl = i.title
@@ -474,7 +474,7 @@ def reqister():
     form2 = SearchForm()
     if form2.validate_on_submit():
         db_sess = db_session.create_session()
-        goods = db_sess.query(Goods)
+        goods = db_sess.query(NFT)
         for i in goods:
             if str(form2.ttle.data).lower() in str(i.title).lower():
                 res.append(i.id)
@@ -522,7 +522,7 @@ def login():
     form2 = SearchForm()
     if form2.validate_on_submit():
         db_sess = db_session.create_session()
-        goods = db_sess.query(Goods)
+        goods = db_sess.query(NFT)
         for i in goods:
             if str(form2.ttle.data).lower() in str(i.title).lower():
                 res.append(i.id)
