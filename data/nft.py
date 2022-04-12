@@ -14,9 +14,10 @@ class NFT(SqlAlchemyBase):
     category = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     address = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     image = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    amount = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
 
     hash_block = sqlalchemy.Column(sqlalchemy.String, nullable=True)
 
     rate = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     sale = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
-
+    cost = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)

@@ -71,55 +71,61 @@ function add_sale(id, type) {
         <button class="btn btn-success" onclick="add_sale({{item.id}}, 'add_sale')">Add sale</button>
         <input id="sale {{item.id}}">
     {% endif %}
-    <img style="margin-left: auto; margin-right: auto; margin-bottom: 10px;" src={{item.image}} class='card-img' alt="" width="150" height="150">
-        <a style="font-size: 1.3rem; width:100%; font-weight: bold;" class="prod_url" href="/product/{{ item.id }}">{{item.title}}</a><h4 class="tx">{{item.category}}</h4>
+    <div class="card-img-contanier">
+        <img style="margin-left: auto; margin-right: auto; margin-bottom: 10px;height: 100%;" src={{item.image}} class='card-img' alt="" width="150" height="150">
+    </div>
+    <div class="card-info-contanier">
+        <div class="mini_menu_block">
+            <a style="font-size: 1.3rem; width:100%; font-weight: bold;" class="prod_url" href="/product/{{ item.id }}">{{item.title}}</a>
+            {% if item.id in favs %}
+            <input type="checkbox" class="inFavorites" id="{{item.id}}" onchange="func(id, 1)"
+                checked>
+            <label for="{{item.id}}"></label>
+            {% else %}
+            <input type="checkbox" class="inFavorites" id="{{item.id}}" onchange="func(id, 1)">
+            <label for="{{item.id}}"></label>
+            {% endif %}
+        </div>
+        <h4 class="tx">{{item.category}}</h4>
         <h4 style="width: 100%;">{{item.cost}} баллов.</h4><br>
         <h5>{% if item.sale != None %}{% if item.sale > 0%}Скидка: {{item.sale}}%{%endif%}{%endif%}</h5>
-    <div style="width: 100%; margin-bottom: 15px;">
-    {% for j in range(item.rate) %}
-        <img align="center" src=/static/img/i2.png alt="" width="25" height="25"
-             class="d-inline-block align-text-top">
-        {% endfor %}
-        {% if 5 - item.rate > 0 %}
-        {% for j in range(5 - item.rate) %}
-        <img align="center" src=/static/img/i.png alt="" width="25" height="25"
-             class="d-inline-block align-text-top">
-        {% endfor %}
-    {% endif %}
-    </div>
-    <br>
+        <div style="width: 100%; margin-bottom: 15px;">
+        {% for j in range(item.rate) %}
+            <img align="center" src=/static/img/i2.png alt="" width="25" height="25"
+                class="d-inline-block align-text-top">
+            {% endfor %}
+            {% if 5 - item.rate > 0 %}
+            {% for j in range(5 - item.rate) %}
+            <img align="center" src=/static/img/i.png alt="" width="25" height="25"
+                class="d-inline-block align-text-top">
+            {% endfor %}
+        {% endif %}
+        </div>
+        <br>
 
-    <div class="checks" align="right">
-        <div>
-            <div class="form-check form-check-inline">
-                {% if current_user.is_authenticated %}
-                {% if item.id in favs %}
-                <input type="checkbox" class="btn-check" id="{{item.id}}" onchange="func(id, 1)"
-                       checked>
-                <label style="margin: 10px;"class="btn btn-outline-success" for="{{item.id}}">В избранном</label>
-                {% else %}
-                <input type="checkbox" class="btn-check" id="{{item.id}}" onchange="func(id, 1)">
-                <label style="margin: 10px;"class="btn btn-outline-success" for="{{item.id}}">В избранное</label>
-                {% endif %}
-
-                {% if item.id in ords %}
-                <input type="checkbox" class="btn-check" id="{{item.id + 100}}" onchange="func(id, 2)"
-                       checked>
-                <label style="margin: 10px;"class="btn btn-outline-success" for="{{item.id + 100}}">В корзине</label>
-                {% else %}
-                <input type="checkbox" class="btn-check" id="{{item.id + 100}}" onchange="func(id, 2)">
-                <label style="margin: 10px;"class="btn btn-outline-success" for="{{item.id + 100}}">В корзину</label>
-                {% endif %}
-                {% else %}
-                <input type="checkbox" class="btn-check" id="{{item.id}}" onchange="alertreg()">
-                <label style="margin: 10px;"class="btn btn-outline-success" for="{{item.id}}">В избранное</label>
-                <input type="checkbox" class="btn-check" id="{{item.id + 100}}" onchange="alertreg()">
-                <label style="margin: 10px;"class="btn btn-outline-success" for="{{item.id + 100}}">В корзину</label>
-                {% endif %}
-                    {% if role == "admin" %}
-                        <button class="btn btn-danger" onclick="remove({{item.id}}, 'remove')">Delete</button>
+        <div class="checks" align="right">
+            <div>
+                <div class="form-check form-check-inline">
+                    {% if current_user.is_authenticated %}
+                    {% if item.id in ords %}
+                    <input type="checkbox" class="btn-check" id="{{item.id + 100}}" onchange="func(id, 2)"
+                        checked>
+                    <label style="margin: 10px;"class="btn btn-outline-success" for="{{item.id + 100}}">В корзине</label>
+                    {% else %}
+                    <input type="checkbox" class="btn-check" id="{{item.id + 100}}" onchange="func(id, 2)">
+                    <label style="margin: 10px;"class="btn btn-outline-success" for="{{item.id + 100}}">В корзину</label>
                     {% endif %}
+                    {% else %}
+                    <input type="checkbox" class="btn-check" id="{{item.id}}" onchange="alertreg()">
+                    <label style="margin: 10px;"class="btn btn-outline-success" for="{{item.id}}">В избранное</label>
+                    <input type="checkbox" class="btn-check" id="{{item.id + 100}}" onchange="alertreg()">
+                    <label style="margin: 10px;"class="btn btn-outline-success" for="{{item.id + 100}}">В корзину</label>
+                    {% endif %}
+                        {% if role == "admin" %}
+                            <button class="btn btn-danger" onclick="remove({{item.id}}, 'remove')">Delete</button>
+                        {% endif %}
 
+                </div>
             </div>
         </div>
     </div>

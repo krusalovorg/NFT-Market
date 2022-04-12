@@ -33,6 +33,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 res = []
 
+DEBUG = True
+
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 
@@ -91,7 +93,7 @@ def logout():
 def main():
     db_session.global_init("db/db.db")
     port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port, debug=DEBUG)
 
 
 # new
@@ -121,7 +123,7 @@ def func_run():
         if current_user.is_authenticated and current_user.role == "admin":
             print("delete", x, y, z)
             db_sess = db_session.create_session()
-            item = db_sess.query(Goods).filter(Goods.id == int(x)).first()
+            item = db_sess.query(NFT).filter(Goods.id == int(x)).first()
             if item:
                 db_sess.delete(item)
 
@@ -136,7 +138,7 @@ def func_run():
             if len(z.split(' ')[1]) == 0:
                 print('скидка пустая')
             else:
-                cur.execute("UPDATE goods SET sale = ? WHERE id = ?", (z.split(' ')[1], int(x)))
+                cur.execute("UPDATE nft SET sale = ? WHERE id = ?", (z.split(' ')[1], int(x)))
                 con.commit()
 
     else:
@@ -167,14 +169,13 @@ def index():
     form = SearchForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        goods = db_sess.query(Goods)
+        goods = db_sess.query(NFT)
         for i in goods:
             if str(form.ttle.data).lower() in str(i.title).lower():
                 res.append(i.id)
         return redirect('/search_results')
     db_sess = db_session.create_session()
-    goods = db_sess.query(Goods)
-    print(GetNFTs("0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621"))
+    goods = db_sess.query(NFT)
     # form4 = FavsForm()
     # form4 = ChecksForm()  # new
     # if form4.validate_on_submit():
@@ -204,14 +205,14 @@ def basket():
     form = SearchForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        goods = db_sess.query(Goods)
+        goods = db_sess.query(NFT)
         for i in goods:
             if str(form.ttle.data).lower() in str(i.title).lower():
                 res.append(i.id)
         return redirect('/search_results')
 
     db_sess = db_session.create_session()
-    goods = db_sess.query(Goods)
+    goods = db_sess.query(NFT)
     summ = 0
     for i in goods:
         if i.id in ords:
@@ -230,7 +231,7 @@ def get_category_choice():
     category = [('Выберети категорию', 'Выберети категорию')]
     buffer = []
     db_sess = db_session.create_session()
-    goods = db_sess.query(Goods)
+    goods = db_sess.query(NFT)
     if current_user.is_authenticated:
         for item in goods:
             if item.category not in buffer:
@@ -248,7 +249,7 @@ def add():
         form2 = SearchForm()
         if form2.validate_on_submit():
             db_sess = db_session.create_session()
-            goods = db_sess.query(Goods)
+            goods = db_sess.query(NFT)
             for i in goods:
                 if str(form2.ttle.data).lower() in str(i.title).lower():
                     res.append(i.id)
@@ -283,50 +284,51 @@ def add():
                 if NFT_Result.get("status") == "true":
                     db_sess = db_session.create_session()
 
-                    nft = NFT(form3.title.data,
-                           "0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621",
-                           form3.description.data,
-                           "https://ipfs.io/ipfs/"+image_hash,
-                           1,
-                           form3.cost.data,
-                           caty,
-                           NFT_Result.get("hash_block"))
+                    nft = NFT(title=form3.title.data,
+                           address="0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621",
+                           description=form3.description.data,
+                           image="https://ipfs.io/ipfs/"+image_hash,
+                           amount=1,
+                           cost=form3.cost.data,
+                           category=caty,
+                           rate=5,
+                           hash_block=NFT_Result.get("hash_block"))
 
                     db_sess.add(nft)
                     db_sess.commit()
 
                     return redirect('/add')
 
-        if form3.validate_on_submit() and (
-                (form3.category.data == "Выберети категорию" and form3.new_category.data != "") or (
-                form3.category.data != "Выберети категорию" and form3.new_category.data == "")):
-            db_sess = db_session.create_session()
-
-            file = request.files["file"]
-            filename = file.filename
-
-            caty = ""
-            if form3.category.data == "Выберети категорию":
-                caty = form3.new_category.data
-            else:
-                caty = form3.category.data
-
-            product = Goods(
-                title=form3.title.data,
-                cost=form3.cost.data,
-                description=form3.description.data,
-                category=caty,
-                rate=0,
-                image="/static/img/" + filename,
-            )
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-            # img = form3.image
-            # img.file.save(os.path.join(app.config['UPLOAD_FOLDER'], form3.image.file.filename))
-
-            db_sess.add(product)
-            db_sess.commit()
-            return redirect('/')
+        # if form3.validate_on_submit() and (
+        #         (form3.category.data == "Выберети категорию" and form3.new_category.data != "") or (
+        #         form3.category.data != "Выберети категорию" and form3.new_category.data == "")):
+        #     db_sess = db_session.create_session()
+        #
+        #     file = request.files["file"]
+        #     filename = file.filename
+        #
+        #     caty = ""
+        #     if form3.category.data == "Выберети категорию":
+        #         caty = form3.new_category.data
+        #     else:
+        #         caty = form3.category.data
+        #
+        #     product = Goods(
+        #         title=form3.title.data,
+        #         cost=form3.cost.data,
+        #         description=form3.description.data,
+        #         category=caty,
+        #         rate=0,
+        #         image="/static/img/" + filename,
+        #     )
+        #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        #
+        #     # img = form3.image
+        #     # img.file.save(os.path.join(app.config['UPLOAD_FOLDER'], form3.image.file.filename))
+        #
+        #     db_sess.add(product)
+        #     db_sess.commit()
+        #     return redirect('/')
         return render_template('add.html', title='Добавление товара', form2=form2,
                                form3=form3)
     else:
@@ -338,7 +340,7 @@ def pay():
     global res
     ords = get_ords()
     db_sess = db_session.create_session()
-    goods = db_sess.query(Goods)
+    goods = db_sess.query(NFT)
     summ = 0
     for i in goods:
         if i.id in ords:
