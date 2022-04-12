@@ -20,7 +20,7 @@ router.post('/create-nft', async function(req, res) {
 
         if (status) {
             console.log("NFT создан успешно:", result.contract)
-            return res.json({"status":"true"})
+            return res.json({"status":"true", "hash_block": result.hash_block})
         } else {
             console.log("Контракт не создан:",result)
         }

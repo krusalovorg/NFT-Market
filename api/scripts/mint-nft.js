@@ -29,7 +29,7 @@ module.exports = async function mintNFT(contractAddress, tokenURI, newOwner) {
     from: METAMASK_PUBLIC_KEY, // your metamask public key
     to: contractAddress, // the smart contract address we want to interact with
     nonce: nonce, // nonce with the no of transactions from our account
-    gas: 2100000, // fee estimate to complete the transaction
+    gas: 2200000, // fee estimate to complete the transaction
 
     data: nftContract.methods
       .createNFT(newOwner, tokenURI) // "0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621" - newOwner

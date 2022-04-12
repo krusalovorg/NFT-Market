@@ -66,8 +66,8 @@ module.exports = async function LoadNFT(tokenURI, newOwner) {
     console.log("1:",result)
 
     const send_signed = await alchemyWeb3.eth.sendSignedTransaction(result.rawTransaction)
-    console.log(send_signed)
-    return {status: true, contract: send_signed}
+    console.log("2:",send_signed)
+    return {status: true, contract: send_signed, hash_block: send_signed.transactionHash}
   } catch (e) {
     console.log(e)
     return {status: false, contract: null, error: e}

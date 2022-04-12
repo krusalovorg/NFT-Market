@@ -1,9 +1,10 @@
 const mintNFT = require('./scripts/mint-nft')
 
-mintNFT('0x0107C4caff63eC471186A48B5b46955bDDC71Bd5',
+mintNFT('0x97AAc3e92963f741563d43E30d7C9E78Ee1Fe2b1',
 'https://ipfs.io/ipfs/Qmbs9mANDvu7bs3Nw7aFMGxAnAPces5r1UazwpyhfePUqr',
 '0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621')
-const API_URL = process.env.API_URL;
+
+// const API_URL = process.env.API_URL;
 
 // const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 

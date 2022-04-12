@@ -1,5 +1,6 @@
 import os
 
+import flask
 from flask import Flask, render_template, redirect, request
 from flask_login import LoginManager, login_user, login_required, logout_user, \
     current_user
@@ -9,6 +10,7 @@ from forms.users import RegisterForm, LoginForm
 from forms.add import AddForm
 from forms.pay import PayForm
 from data.goods import Goods
+from data.nft import NFT
 from data.users import User
 from data.association import Association
 from data import db_session
@@ -37,7 +39,7 @@ ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 def get_favs():
     favs = []
     db_sess = db_session.create_session()
-    goods = db_sess.query(Goods)
+    goods = db_sess.query(NFT)
     a = db_sess.query(Association)
     if current_user.is_authenticated:
         for i in goods:
@@ -51,7 +53,7 @@ def get_favs():
 def get_category():
     category = []
     db_sess = db_session.create_session()
-    goods = db_sess.query(Goods)
+    goods = db_sess.query(NFT)
     if current_user.is_authenticated:
         for item in goods:
             if item.category not in category:
@@ -62,7 +64,7 @@ def get_category():
 def get_ords():
     ords = []
     db_sess = db_session.create_session()
-    goods = db_sess.query(Goods)
+    goods = db_sess.query(NFT)
     a = db_sess.query(Association)
     if current_user.is_authenticated:
         for i in goods:
@@ -236,6 +238,9 @@ def get_category_choice():
                 buffer.append(item.category)
     return category
 
+@app.route('/meta/<hash_block>', methods=['GET', 'POST'])
+def get_metadata(hash_block):
+    return flask.jsonify()
 
 @app.route('/add', methods=['GET', 'POST'])
 def add():
@@ -267,15 +272,30 @@ def add():
 
             image_hash = uploadImageNFT("static/img/"+filename)
             if image_hash:
-                CreateNFT(form3.title.data,
+                NFT_Result = CreateNFT(form3.title.data,
                        "0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621",
                        form3.description.data,
                        "https://ipfs.io/ipfs/"+image_hash,
                        1,
                        form3.cost.data,
                        caty)
-                print("CREATE")
-            return redirect('/add')
+                print(NFT_Result)
+                if NFT_Result.get("status") == "true":
+                    db_sess = db_session.create_session()
+
+                    nft = NFT(form3.title.data,
+                           "0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621",
+                           form3.description.data,
+                           "https://ipfs.io/ipfs/"+image_hash,
+                           1,
+                           form3.cost.data,
+                           caty,
+                           NFT_Result.get("hash_block"))
+
+                    db_sess.add(nft)
+                    db_sess.commit()
+
+                    return redirect('/add')
 
         if form3.validate_on_submit() and (
                 (form3.category.data == "Выберети категорию" and form3.new_category.data != "") or (
