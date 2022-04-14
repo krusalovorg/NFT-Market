@@ -14,7 +14,7 @@ from data.nft import NFT
 from data.users import User
 from data.association import Association
 from data import db_session
-from nft.api import CreateNFT, GetNFTs, uploadImageNFT
+from nft.api import CreateNFT, GetNFTs, uploadImageNFT, getDataBlock
 
 # from forms.check import ChecksForm  # new
 
@@ -176,6 +176,7 @@ def index():
         return redirect('/search_results')
     db_sess = db_session.create_session()
     goods = db_sess.query(NFT)
+
     # form4 = FavsForm()
     # form4 = ChecksForm()  # new
     # if form4.validate_on_submit():
@@ -232,7 +233,10 @@ def basket():
     db_sess = db_session.create_session()
     goods = db_sess.query(NFT)
     summ = 0
+
     for i in goods:
+        print(i.hash_block,getDataBlock(i.hash_block))
+
         if i.id in ords:
             summ += i.cost
 
