@@ -49,7 +49,7 @@ def createEthAccount():
     priv = secrets.token_hex(32)
     private_key = "0x" + priv
     acct = Account.from_key(private_key)
-    return private_key, acct
+    return private_key, acct.address
 
 # def addMetadata(name, owner, description, image, amount, price, category, block_hash):
 #     db.insert({
