@@ -14,7 +14,7 @@ from data.nft import NFT
 from data.users import User
 from data.association import Association
 from data import db_session
-from nft.api import CreateNFT, GetNFTs, uploadImageNFT, getDataBlock
+from nft.api import CreateNFT, GetNFTs, uploadImageNFT, getDataBlock, createEthAccount
 
 # from forms.check import ChecksForm  # new
 
@@ -236,7 +236,6 @@ def basket():
 
     for i in goods:
         print(i.hash_block,getDataBlock(i.hash_block))
-
         if i.id in ords:
             summ += i.cost
 

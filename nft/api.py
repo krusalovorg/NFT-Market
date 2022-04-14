@@ -2,6 +2,9 @@ import requests
 import subprocess, os
 import web3
 from web3 import contract, Web3
+from eth_account import Account
+import secrets
+
 
 def CreateNFT(name, owner, description, image, amount, price, category):
     req = requests.post("http://localhost:3000/api/create-nft", {
@@ -41,6 +44,12 @@ def getDataBlock(hash_block):
         return block.input
     except web3.exceptions.BlockNotFound:
         return None
+
+def createEthAccount():
+    priv = secrets.token_hex(32)
+    private_key = "0x" + priv
+    acct = Account.from_key(private_key)
+    return private_key, acct
 
 # def addMetadata(name, owner, description, image, amount, price, category, block_hash):
 #     db.insert({
