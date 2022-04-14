@@ -617,8 +617,40 @@ padding-bottom: 10px
   color: #5F6F76;
 }
 .contract-card:hover{
-transform: scale(1.04);
+  transform: scale(1.04);
 }
+
+.contract-card-info {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+  align-items: flex-start;
+  float: left;
+  margin: 40px;
+
+  width: 330px;
+
+  background-image: url('../img/bg/card-bg.png');
+  background-position-x: -50px;
+  background-position-y: -80px;
+  background-repeat: no-repeat;
+  background-size: 150%;
+  border-radius: 39px;
+  padding: 30px 20px 30px 20px;
+  transition: 0.5s;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+
+  width: 95%;
+  justify-content: space-between;
+  background: #F8F8F8;
+  border-radius: 19px;
+  box-shadow: none;
+  color: #5F6F76;
+
+  height: 100%;
+}
+
 .card-info-contanier {
   width: 50%;
   height: 100%;
