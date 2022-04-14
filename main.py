@@ -235,7 +235,6 @@ def basket():
     summ = 0
 
     for i in goods:
-        print(i.hash_block,getDataBlock(i.hash_block))
         if i.id in ords:
             summ += i.cost
 
