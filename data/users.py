@@ -19,11 +19,12 @@ class User(SqlAlchemyBase, UserMixin):
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     role = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     balance = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
+    nickname = sqlalchemy.Column(sqlalchemy.String, nullable=True)
 
     # goods = orm.relation("Goods")
 
     def __repr__(self):
-        return f'<User> {self.id} {self.name} {self.surname} {self.email} {self.role} {self.balance}'
+        return f'<User> {self.id} {self.name} {self.surname} {self.email} {self.role} {self.balance} {self.nickname}'
 
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)

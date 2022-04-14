@@ -198,6 +198,24 @@ def index():
                                form2=form, cats=categories, role=False)
 
 
+@login_required
+@app.route("/profile/<r>", methods=['GET', 'POST'])
+def profile(r):
+    global res
+    form = SearchForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        goods = db_sess.query(Goods)
+        for i in goods:
+            if str(form.ttle.data).lower() in str(i.title).lower():
+                res.append(i.id)
+        return redirect('/search_results')
+
+    return render_template("profile.html", title=r,
+                           favs=get_favs(),
+                           ords=get_ords(), form2=form)
+
+
 @app.route('/basket', methods=['GET', 'POST'])
 def basket():
     global res
@@ -239,9 +257,11 @@ def get_category_choice():
                 buffer.append(item.category)
     return category
 
+
 @app.route('/meta/<hash_block>', methods=['GET', 'POST'])
 def get_metadata(hash_block):
     return flask.jsonify()
+
 
 @app.route('/add', methods=['GET', 'POST'])
 def add():
@@ -271,28 +291,28 @@ def add():
             filename = file.filename
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-            image_hash = uploadImageNFT("static/img/"+filename)
+            image_hash = uploadImageNFT("static/img/" + filename)
             if image_hash:
                 NFT_Result = CreateNFT(form3.title.data,
-                       "0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621",
-                       form3.description.data,
-                       "https://ipfs.io/ipfs/"+image_hash,
-                       1,
-                       form3.cost.data,
-                       caty)
+                                       "0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621",
+                                       form3.description.data,
+                                       "https://ipfs.io/ipfs/" + image_hash,
+                                       1,
+                                       form3.cost.data,
+                                       caty)
                 print(NFT_Result)
                 if NFT_Result.get("status") == "true":
                     db_sess = db_session.create_session()
 
                     nft = NFT(title=form3.title.data,
-                           address="0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621",
-                           description=form3.description.data,
-                           image="https://ipfs.io/ipfs/"+image_hash,
-                           amount=1,
-                           cost=form3.cost.data,
-                           category=caty,
-                           rate=5,
-                           hash_block=NFT_Result.get("hash_block"))
+                              address="0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621",
+                              description=form3.description.data,
+                              image="https://ipfs.io/ipfs/" + image_hash,
+                              amount=1,
+                              cost=form3.cost.data,
+                              category=caty,
+                              rate=5,
+                              hash_block=NFT_Result.get("hash_block"))
 
                     db_sess.add(nft)
                     db_sess.commit()
@@ -392,7 +412,7 @@ def favorites():
     db_sess = db_session.create_session()
     goods = db_sess.query(NFT)
     return render_template("favorites.html", title='Избранное', goods=goods,
-                           favs=get_favs(), form2=form)
+                           favs=get_favs(), ords=get_ords(), form2=form)
 
 
 @app.route('/search_results', methods=['GET', 'POST'])
@@ -494,6 +514,7 @@ def reqister():
                                    form2=form2)
         if form.email.data == "adminpanel@adminpanel.adminpanel":
             user = User(
+                nickname=form.nickname.data,
                 surname=form.surname.data,
                 name=form.name.data,
                 email=form.email.data,
@@ -502,6 +523,7 @@ def reqister():
             )
         else:
             user = User(
+                nickname=form.nickname.data,
                 surname=form.surname.data,
                 name=form.name.data,
                 email=form.email.data,
