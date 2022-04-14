@@ -10,7 +10,7 @@ from wtforms.validators import DataRequired
 
 from forms.search import SearchForm
 from forms.users import RegisterForm, LoginForm
-from forms.settings import RedactForm
+# from forms.settings import RedactForm
 from forms.add import AddForm
 from forms.pay import PayForm
 from data.goods import Goods
@@ -258,6 +258,23 @@ def settings():
         cur.execute("UPDATE users SET nickname = ?, description = ?, name = ?, surname = ? WHERE id = ?", (
             form_redact.nickname.data, form_redact.description.data, form_redact.name.data, form_redact.surname.data,
             current_user.id))
+
+        file = request.files["file"]
+        filename = file.filename
+        if filename:
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            cur.execute("UPDATE users SET image = ? WHERE id = ?", (
+                os.path.join(app.config['UPLOAD_FOLDER'], filename),
+                current_user.id))
+
+        file = request.files["file2"]
+        filename = file.filename
+        if filename:
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            cur.execute("UPDATE users SET banner = ? WHERE id = ?", (
+                os.path.join(app.config['UPLOAD_FOLDER'], filename),
+                current_user.id))
+
         con.commit()
         return redirect(f"/profile/{current_user.name}")
 

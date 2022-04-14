@@ -23,6 +23,8 @@ class User(SqlAlchemyBase, UserMixin):
     public_address = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     address = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     description = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    image = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    banner = sqlalchemy.Column(sqlalchemy.String, nullable=True)
 
     # goods = orm.relation("Goods")
 

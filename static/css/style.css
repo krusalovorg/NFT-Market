@@ -932,8 +932,8 @@ input:focus:not([type=submit]), textarea:focus {
 
 }
 
-.profile .image {
-    display: inline-block;
+.profile .img-container {
+    /*display: inline-block;*/
     position: relative;
     height: 15vw;
     width: 15vw;
@@ -943,6 +943,11 @@ input:focus:not([type=submit]), textarea:focus {
     background-color: white;
     border: 3px solid #C0C0C0;
     border-radius: 50%;
+}
+
+.banner-container {
+    position: relative;
+    /*display: inline-block;*/
 }
 
 .profile .description {
@@ -1013,7 +1018,6 @@ input:focus:not([type=submit]), textarea:focus {
     right: 0;
     position: absolute
 }
-
 
 @keyframes moving {
     100% {
