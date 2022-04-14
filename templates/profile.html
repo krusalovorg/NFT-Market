@@ -1,7 +1,10 @@
 {% extends "base.html" %}
+
 {% block content %}
 <div class="info-container">
-    <div class="banner">
+    <div class="banner" style="">
+        <a class="btn-settings" href="/settings"><img height="30px" width="30px"
+                                                      src="/static/icons/settings.svg"></a>
         <div class="profile-name">
             <h4>{{current_user.nickname}}</h4>
         </div>
@@ -12,7 +15,7 @@
         <div class="profile-text">
 
             <div class="description">
-                <h4 class="desc-text">тут должно быть описание 123123</h4>
+                <h4 class="desc-text">{{current_user.description}}</h4>
             </div>
         </div>
     </div>
@@ -30,7 +33,7 @@
 
     </div>
     <div class="nft-view">
-    тут должны быть нфт
+        тут должны быть нфт
     </div>
 </div>
 

@@ -1,12 +1,16 @@
 import os
 
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
 import flask
 from flask import Flask, render_template, redirect, request
 from flask_login import LoginManager, login_user, login_required, logout_user, \
     current_user
+from wtforms.validators import DataRequired
 
 from forms.search import SearchForm
 from forms.users import RegisterForm, LoginForm
+from forms.settings import RedactForm
 from forms.add import AddForm
 from forms.pay import PayForm
 from data.goods import Goods
@@ -203,6 +207,7 @@ def index():
 @app.route("/profile/<r>", methods=['GET', 'POST'])
 def profile(r):
     global res
+    # nfts = []
     form = SearchForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
@@ -212,9 +217,53 @@ def profile(r):
                 res.append(i.id)
         return redirect('/search_results')
 
+    # db_sess = db_session.create_session()
+    # nft = db_sess.query(NFT)
+    # for i in nft:
+    #     if i.address == current_user.address:
+    #         nfts.append()
     return render_template("profile.html", title=r,
                            favs=get_favs(),
                            ords=get_ords(), form2=form)
+
+
+@login_required
+@app.route("/settings", methods=['GET', 'POST'])
+def settings():
+    global res
+
+    ################################# форма тут для того, чтобы сохранять дефолтыне значения
+    class RedactingForm(FlaskForm):
+        nickname = StringField('Никнейм', validators=[DataRequired()], default=current_user.nickname)
+        description = StringField('Описание', validators=[DataRequired()], default=current_user.description)
+        name = StringField('Имя', validators=[DataRequired()], default=current_user.name)
+        surname = StringField('Фамилия', validators=[DataRequired()], default=current_user.surname)
+        submit = SubmitField('Применить')
+
+    ##################################
+    form = SearchForm()
+
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        goods = db_sess.query(Goods)
+        for i in goods:
+            if str(form.ttle.data).lower() in str(i.title).lower():
+                res.append(i.id)
+        return redirect('/search_results')
+
+    form_redact = RedactingForm()
+    if form_redact.validate_on_submit():
+        con = sqlite3.connect(db)
+        cur = con.cursor()
+        cur.execute("UPDATE users SET nickname = ?, description = ?, name = ?, surname = ? WHERE id = ?", (
+            form_redact.nickname.data, form_redact.description.data, form_redact.name.data, form_redact.surname.data,
+            current_user.id))
+        con.commit()
+        return redirect(f"/profile/{current_user.name}")
+
+    return render_template("settings.html", title='Настройки',
+                           favs=get_favs(),
+                           ords=get_ords(), form2=form, form_red=form_redact)
 
 
 @app.route('/basket', methods=['GET', 'POST'])
@@ -236,9 +285,9 @@ def basket():
 
     for i in goods:
         if i.id in ords:
-            summ += i.cost
+            summ += i.cost - i.cost * (i.sale / 100)
 
-    return render_template("basket.html", title='Корзина', goods=goods,
+    return render_template("basket.html", title='Корзина', goods=goods, favs=get_favs(),
                            ords=ords, summ=summ, form2=form)
 
 
@@ -281,10 +330,10 @@ def add():
         form3.category.choices = cats
 
         if form3.validate_on_submit() and (
-                (form3.category.data == "Выберети категорию" and form3.new_category.data != "") or (
-                form3.category.data != "Выберети категорию" and form3.new_category.data == "")):
+                (form3.category.data == "Выберите категорию" and form3.new_category.data != "") or (
+                form3.category.data != "Выберите категорию" and form3.new_category.data == "")):
             caty = ""
-            if form3.category.data == "Выберети категорию":
+            if form3.category.data == "Выберите категорию":
                 caty = form3.new_category.data
             else:
                 caty = form3.category.data

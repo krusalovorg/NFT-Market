@@ -123,9 +123,9 @@ function add_sale(id, type) {
                 <h4 class="text_desc">Категория: {{item.category}}</h4>
                 <h4 class="text_desc">Автор: <a target="_blank" class="text_link" href="https://rinkeby.etherscan.io/address/{{item.address}}">{{item.address[:10]}}...</a></h4>
                 <h4 class="text_desc">Описание: {{item.description}}</h4>
-                <h4  class="text_desc NonTextLinkStyle">Оригинал: <a target="_blank" class="text_link" href="{{ item.image }}">{{item.image[21:30]}}...</a></h4>
-                
-                <h4 class="text_desc_more NonTextLinkStyle" target="_blank" href="/product/{{ item.id }}">Подробнее <img src="/static/icons/arrow.svg"/></h4>
+                <h4 class="text_desc NonTextLinkStyle">Оригинал: <a target="_blank" class="text_link" href="{{ item.image }}">{{item.image[21:30]}}...</a></h4>
+
+                <a href="/product/{{ item.id }}" style="display:inline-block;"><h4 class="text_desc_more NonTextLinkStyle" target="_blank">Подробнее <img src="/static/icons/arrow.svg"/></h4></a>
             </div>
             <!-- 
                 <div style="width: 100%; margin-bottom: 15px;">

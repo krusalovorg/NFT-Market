@@ -20,6 +20,9 @@ class User(SqlAlchemyBase, UserMixin):
     role = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     balance = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     nickname = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    public_address = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    address = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    description = sqlalchemy.Column(sqlalchemy.String, nullable=True)
 
     # goods = orm.relation("Goods")
 

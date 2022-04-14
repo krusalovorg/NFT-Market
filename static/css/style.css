@@ -903,7 +903,6 @@ input:focus:not([type=submit]), textarea:focus {
 }
 
 .NonTextLinkStyle {
-<<<<<<< HEAD
     text-decoration: none;
 }
 
@@ -922,7 +921,7 @@ input:focus:not([type=submit]), textarea:focus {
     top: 0;
     min-width: 100%;
     height: 25vh;
-    background-color: #F6F2FF;
+    background-color: #E1EDFF;
     border-bottom: 3px solid #C0C0C0;
 }
 
@@ -1004,40 +1003,66 @@ input:focus:not([type=submit]), textarea:focus {
 
 .btn-outline-primary {
     color: #3A89FF;
-=======
-  text-decoration: none;
+    text-decoration: none;
+}
+
+.btn-settings {
+    transition: 3s;
+    margin: 18px;
+    top: 0;
+    right: 0;
+    position: absolute
+}
+
+
+@keyframes moving {
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+
+
+.btn-settings :hover {
+    animation: moving 3s infinite linear;
 }
 
 @media all and (max-width: 960px) {
-  .contract-card {
-    justify-content: center;
-    flex-direction: column;
-    margin: 0;
-  }
-  .card-img-contanier, .card-info-contanier {
-    width: 100%;
-  }
-  .card-info-contanier {
-    margin-top: 1em;
-  }
-  .header .wrapper {
-    justify-content: space-around;
-  }
-  .header-item-right ul {
-    padding: 0;
-  }
-  .header .container {
-    padding: 0;
-  }
-  .card-img-custome {
-    max-width: 248px;
-  }
-  .contanier_nfts {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    padding-top: 2em;
-  }
->>>>>>> 3659a59f10c3524761e93e7a5343e08cfe1ef905
+    .contract-card {
+        justify-content: center;
+        flex-direction: column;
+        margin: 0;
+    }
+
+    .card-img-contanier, .card-info-contanier {
+        width: 100%;
+    }
+
+    .card-info-contanier {
+        margin-top: 1em;
+    }
+
+    .header .wrapper {
+        justify-content: space-around;
+    }
+
+    .header-item-right ul {
+        padding: 0;
+    }
+
+    .header .container {
+        padding: 0;
+    }
+
+    .card-img-custome {
+        max-width: 248px;
+    }
+
+    .contanier_nfts {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding-top: 2em;
+    }
+
 }

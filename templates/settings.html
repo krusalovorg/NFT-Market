@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<form action="" method="post" enctype=multipart/form-data>
+    {{ form_red.hidden_tag() }}
+    <p>
+        {{ form_red.nickname.label }}<br>
+        {{ form_red.nickname(class="form-control") }}<br>
+        {% for error in form_red.nickname.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+
+    <p>
+        {{ form_red.description.label }}<br>
+        {{ form_red.description(class="form-control") }}<br>
+        {% for error in form_red.description.errors %}
+    <p content="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+
+    <p>
+        {{ form_red.name.label }}<br>
+        {{ form_red.name(class="form-control") }}<br>
+        {% for error in form_red.name.errors %}
+    <p content="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+
+    <p>
+        {{ form_red.surname.label }}<br>
+        {{ form_red.surname(class="form-control") }}<br>
+        {% for error in form_red.surname.errors %}
+    <p content="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+
+    <p>{{ form_red.submit(type="submit", class="btn btn-primary") }}</p>
+    {{ message }}
+</form>
+{% endblock %}
