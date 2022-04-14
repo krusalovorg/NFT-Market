@@ -1,9 +1,7 @@
 import requests
-from web3 import Web3, HTTPProvider
 import subprocess, os
-from tinydb import TinyDB, Query
-
-db = TinyDB('metadata.json')
+import web3
+from web3 import contract, Web3
 
 def CreateNFT(name, owner, description, image, amount, price, category):
     req = requests.post("http://localhost:3000/api/create-nft", {
@@ -32,7 +30,17 @@ def uploadImageNFT(image_path):
     print("HASH:",ipfs_hash.decode())
     return ipfs_hash.decode().strip()
 
-Metadata = Query()
+w3 = Web3(Web3.HTTPProvider("https://rinkeby.infura.io/v3/296ed10aa2eb4a80b0959f7cea646878"))
+
+def getDataBlock(hash_block):
+    try:
+        block = w3.eth.get_transaction(hash_block)
+        print(block.input)
+        #contract_ = web3.contract.Contract("0x0000")
+        #data = contract_.decode_function_input(block.input)
+        return block.input
+    except web3.exceptions.BlockNotFound:
+        return None
 
 # def addMetadata(name, owner, description, image, amount, price, category, block_hash):
 #     db.insert({
