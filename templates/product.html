@@ -90,7 +90,12 @@ function alertreg(time){
             <h5 class="text_desc">Автор: <a target="_blank" class="text_link" href="https://rinkeby.etherscan.io/address/{{item.address}}">{{item.address[:10]}}...</a></h5>
             <h4 class="text_desc">Описание: {{item.description}}</h4>
             <a  class="text_desc NonTextLinkStyle">Оригинал: <a target="_blank" class="text_link" href="{{ item.image }}">{{item.image[21:30]}}...</a></a>
-            <a class="text_desc_more NonTextLinkStyle" target="_blank" href="/product/{{ item.id }}">Подробнее <img src="/static/icons/arrow.svg"/></a>
+        </div>
+        <div class="block_desc" style="margin-bottom: 10px;">
+            <h4 class="title_description">Характеристики</h4>
+            <h4 class="text_desc">Тип: {{item.category}}</h4>
+            <h4 class="text_desc">Размер: </h4>
+            <h4 class="text_desc">Объем: 0.142mb</h4>
         </div>
         <!--
             <div style="width: 100%; margin-bottom: 15px;">
@@ -136,14 +141,6 @@ function alertreg(time){
                         <img src="/static/icons/card.svg" style="margin-left: 5px;"/>
                     </label>
                 {% endif %}
-            {% else %}
-            <a target="_blank" href="/product/{{ item.id }}">
-                <input disabled type="checkbox" class="btn-check" id="{{item.id + 100}}">
-                <label class="button_in_backet" id="label_in_basket_{{item.id}}" for="{{item.id + 100}}">
-                    Подробнее
-                    <img src="/static/icons/card.svg" style="margin-left: 5px;"/>
-                </label>
-            </a>
             {% endif %}
         </div>
         <div class="checks" align="right">
@@ -153,6 +150,9 @@ function alertreg(time){
             {% endif %}
         </div>
     </div>
+</div>
+<div class='contract-card-info'>
+    <h5 class="owner_link">История транзакций:</a></h5>
 </div>
 {% endif %}
 {% endfor %}
