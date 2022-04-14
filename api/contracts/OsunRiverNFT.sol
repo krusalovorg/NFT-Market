@@ -14,7 +14,7 @@ contract MarketNFT is ERC721, Ownable {
     Counters.Counter private _tokenIds;
 
     // the name and symbol of the NFT respectively
-    constructor() public ERC721("TheOsunRiver", "TOR") {}
+    constructor() public ERC721("NFTMarketToken", "NFT_TOKEN") {}
 
     // Create a function to mint/create the NFT
     // receiver takes a type of address. This is the wallet address of the user we would like to transfer ownership of our newly minted NFT to.
