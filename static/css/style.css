@@ -841,3 +841,36 @@ padding-bottom: 10px
 .NonTextLinkStyle {
   text-decoration: none;
 }
+
+@media all and (max-width: 960px) {
+  .contract-card {
+    justify-content: center;
+    flex-direction: column;
+    margin: 0;
+  }
+  .card-img-contanier, .card-info-contanier {
+    width: 100%;
+  }
+  .card-info-contanier {
+    margin-top: 1em;
+  }
+  .header .wrapper {
+    justify-content: space-around;
+  }
+  .header-item-right ul {
+    padding: 0;
+  }
+  .header .container {
+    padding: 0;
+  }
+  .card-img-custome {
+    max-width: 248px;
+  }
+  .contanier_nfts {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 2em;
+  }
+}

@@ -87,9 +87,10 @@ function alertreg(time){
         <div class="block_desc" style="margin-bottom: 10px;">
             <h4 class="title_description">Описание</h4>
             <h4 class="text_desc">Категория: {{item.category}}</h4>
-            <h5 class="text_desc">Автор: <a target="_blank" class="text_link" href="https://rinkeby.etherscan.io/address/{{item.address}}">{{item.address[:10]}}...</a></h5>
+            <h4 class="text_desc">Автор: <a target="_blank" class="text_link" href="https://rinkeby.etherscan.io/address/{{item.address}}">{{item.address[:10]}}...</a></h4>
             <h4 class="text_desc">Описание: {{item.description}}</h4>
-            <a  class="text_desc NonTextLinkStyle">Оригинал: <a target="_blank" class="text_link" href="{{ item.image }}">{{item.image[21:30]}}...</a></a>
+            <h4  class="text_desc NonTextLinkStyle">Оригинал: <a target="_blank" class="text_link" href="{{ item.image }}">{{item.image[21:30]}}...</a></h4>
+            <h4  class="text_desc NonTextLinkStyle">Блок: <a target="_blank" class="text_link" href="{{ item.image }}">{{item.hash_block[21:30]}}...</a></h4>
         </div>
         <div class="block_desc" style="margin-bottom: 10px;">
             <h4 class="title_description">Характеристики</h4>
