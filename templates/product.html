@@ -4,24 +4,38 @@
 
 <script type=text/javascript>
     function func(id, type){
-    $.ajax({
-        url : "/func_run", // the endpoint
-        type : "GET", // http method
-        data : { par_1 : id,
-                 par_2 : document.getElementById(id).checked,
-                 par_3 : type }, // data sent with the request
-        // for successful response
-        success : function(json) {
-            console.log("success"); // another sanity check
-            },
+        $.ajax({
+            url : "func_run", // the endpoint
+            type : "GET", // http method
+            data : { par_1 : id,
+                     par_2 : document.getElementById(id).checked,
+                     par_3 : type }, // data sent with the request
+            // for successful response
+            success : function(json) {
+                console.log("success"); // another sanity check
+                if (type == 1) {
+                    if (document.getElementById(id).checked) {
+                        $("#icon_heart_"+id).attr("src","/static/icons/HeartFill.svg");
+                    } else {
+                        $("#icon_heart_"+id).attr("src","/static/icons/HeartNotFill.svg");
+                    }
+                } else if (type == 2) {
+                    var input_id_label = parseInt(id)-100;
+                    console.log(document.getElementById(id).checked)
+                    if (document.getElementById(id).checked) {
+                        $("#label_in_basket_"+input_id_label.toString()).text("В корзине");
+                    } else {
+                        $("#label_in_basket_"+input_id_label.toString()).text("В корзину");
+                    }
+                }
+                },
 
-        // for non-successful response
-        error : function(xhr,errmsg,err) {
-            console.log(xhr.status + ": " + xhr.responseText); // provide info about the error to the console
-            }
-    });
-};
-
+            // for non-successful response
+            error : function(xhr,errmsg,err) {
+                console.log(xhr.status + ": " + xhr.responseText); // provide info about the error to the console
+                }
+        });
+    };
 
 
 

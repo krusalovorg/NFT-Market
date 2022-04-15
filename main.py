@@ -132,7 +132,15 @@ def func_run():
                 db_sess.delete(item)
 
                 db_sess.commit()
+    elif z == "remove_user":
+        if current_user.is_authenticated and current_user.role == "admin":
+            print("delete user", x, y, z)
+            db_sess = db_session.create_session()
+            item = db_sess.query(User).filter(User.id == x).first()
+            if item:
+                db_sess.delete(item)
 
+                db_sess.commit()
     elif z.startswith('sale'):
         if current_user.is_authenticated and current_user.role == "admin":
             print("add sale", x, y, z)
@@ -581,21 +589,31 @@ def reqister():
                                    message="Такой пользователь уже есть",
                                    form2=form2)
         if form.email.data == "adminpanel@adminpanel.adminpanel":
+            private, address_ = createEthAccount()
+
             user = User(
                 nickname=form.nickname.data,
                 surname=form.surname.data,
                 name=form.name.data,
                 email=form.email.data,
                 role="admin",
+                private_key=private,
+                address=address_,
+                description="NFT художник.. ( изменить описание можно в настройках аккаунта )",
                 balance=0
             )
         else:
+            private, address_ = createEthAccount()
+
             user = User(
                 nickname=form.nickname.data,
                 surname=form.surname.data,
                 name=form.name.data,
                 email=form.email.data,
-                role="user"
+                private_key=private,
+                address=address_,
+                description="NFT художник.. ( изменить описание можно в настройках аккаунта )",
+                role="user",
             )
         user.set_password(form.password.data)
         db_sess.add(user)
@@ -604,6 +622,26 @@ def reqister():
     return render_template('register.html', title='Регистрация', form=form,
                            form2=form2)
 
+@app.route('/admin/users', methods=['GET', 'POST'])
+def admin_users():
+    if current_user.is_authenticated and current_user.role == "admin":
+        global res
+
+        form2 = SearchForm()
+        if form2.validate_on_submit():
+            db_sess = db_session.create_session()
+            goods = db_sess.query(NFT)
+            for i in goods:
+                if str(form2.ttle.data).lower() in str(i.title).lower():
+                    res.append(i.id)
+            return redirect('/search_results')
+
+        db_sess = db_session.create_session()
+        users = db_sess.query(User)
+        return render_template('admin/users.html', title='Пользователи', users=users,
+                               form2=form2, role=current_user.role)
+    else:
+        return redirect("/")
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

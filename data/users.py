@@ -20,8 +20,10 @@ class User(SqlAlchemyBase, UserMixin):
     role = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     balance = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     nickname = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    public_address = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+
+    private_key = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     address = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+
     description = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     image = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     banner = sqlalchemy.Column(sqlalchemy.String, nullable=True)
