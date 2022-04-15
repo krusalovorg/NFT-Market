@@ -466,7 +466,8 @@ def add():
         #     return redirect('/')
         return render_template('add.html', title='Добавление товара', form2=form2,
                                form3=form3,
-                               gas=nftapi.getPriceGas())
+                               gas=nftapi.getPriceGas(),
+                               role=current_user.role)
     else:
         return redirect('/')
 

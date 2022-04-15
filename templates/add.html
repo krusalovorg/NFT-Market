@@ -51,7 +51,9 @@
     </p>
     {% endfor %}
 
-    <p>{{ form3.createAsMarket() }} {{ form3.createAsMarket.label }}</p>
+    {% if role == "admin" %}
+        <p>{{ form3.createAsMarket() }} {{ form3.createAsMarket.label }}</p>
+    {% endif %}
 
     <input type=file name=file class="form-control">
 
