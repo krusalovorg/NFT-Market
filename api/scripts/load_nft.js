@@ -20,9 +20,11 @@ module.exports = async function LoadNFT(tokenURI, newOwner, private_key) {
   if (private_key == "market") {
     private_key = METAMASK_PRIVATE_KEY
   } else {
+    //let provider = await ethers.getDefaultProvider('https://eth-rinkeby.alchemyapi.io/v2/iSm7xkVtMVgP85UJEvYOunFRFFmF9xdg');
+    const provider = await new ethers.providers.JsonRpcProvider(API_URL);
+    console.log(provider)
+    deployer = await new ethers.Wallet(private_key, provider);
   }
-  let provider = ethers.getDefaultProvider('rinkeby');
-  deployer = new ethers.Wallet(private_key, provider);
 
   const acc_balance = await deployer.getBalance();
 
