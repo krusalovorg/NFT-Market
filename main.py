@@ -226,7 +226,28 @@ def index():
 @app.route("/profile/<r>", methods=['GET', 'POST'])
 def profile(r):
     global res
-    # nfts = []
+    nfts = []
+
+    # db_sess = db_session.create_session()
+    # a = db_sess.query(User)  # .filter(User.nickname == r).first()
+    # for i in a:
+    #     if i.nickname == r:
+    #         print(i)
+
+    con = sqlite3.connect(db)
+    cur = con.cursor()
+    db_imgs = cur.execute("SELECT image, banner FROM users WHERE nickname = ?", (r,)).fetchall()[0]
+    print(db_imgs)
+
+    if not os.path.exists(f'{db_imgs[0]}'):
+        cur.execute("UPDATE users SET image = NULL WHERE nickname = ?", (r,))
+    if not os.path.exists(f'{db_imgs[1]}'):
+        cur.execute("UPDATE users SET banner = NULL WHERE nickname = ?", (r,))
+
+    user = cur.execute("SELECT * FROM users WHERE nickname = ?", (r,)).fetchone()
+    print(user)
+    con.commit()
+
     form = SearchForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
@@ -235,15 +256,16 @@ def profile(r):
             if str(form.ttle.data).lower() in str(i.title).lower():
                 res.append(i.id)
         return redirect('/search_results')
-
+    #
     # db_sess = db_session.create_session()
     # nft = db_sess.query(NFT)
     # for i in nft:
     #     if i.address == current_user.address:
     #         nfts.append()
+
     return render_template("profile.html", title=r,
                            favs=get_favs(),
-                           ords=get_ords(), form2=form)
+                           ords=get_ords(), form2=form, user=user)
 
 
 @login_required
@@ -281,6 +303,10 @@ def settings():
         file = request.files["file"]
         filename = file.filename
         if filename:
+            oldfile = cur.execute("SELECT image FROM users WHERE id = ?", (current_user.id,)).fetchone()[0]
+            if oldfile:
+                os.remove(oldfile)
+
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             cur.execute("UPDATE users SET image = ? WHERE id = ?", (
                 os.path.join(app.config['UPLOAD_FOLDER'], filename),
@@ -289,13 +315,17 @@ def settings():
         file = request.files["file2"]
         filename = file.filename
         if filename:
+            oldfile = cur.execute("SELECT banner FROM users WHERE id = ?", (current_user.id,)).fetchone()[0]
+            if oldfile:
+                os.remove(oldfile)
+
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             cur.execute("UPDATE users SET banner = ? WHERE id = ?", (
                 os.path.join(app.config['UPLOAD_FOLDER'], filename),
                 current_user.id))
 
         con.commit()
-        return redirect(f"/profile/{current_user.name}")
+        return redirect(f"/profile/{current_user.nickname}")
 
     return render_template("settings.html", title='Настройки',
                            favs=get_favs(),
@@ -382,12 +412,12 @@ def add():
             if image_hash:
                 if current_user.role == "admin" and form3.createAsMarket == True:
                     NFT_Result = nftapi.CreateMarketNFT(form3.title.data,
-                                           "0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621",
-                                           form3.description.data,
-                                           "https://ipfs.io/ipfs/" + image_hash,
-                                           1,
-                                           form3.cost.data,
-                                           caty)
+                                                        "0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621",
+                                                        form3.description.data,
+                                                        "https://ipfs.io/ipfs/" + image_hash,
+                                                        1,
+                                                        form3.cost.data,
+                                                        caty)
                     print(NFT_Result)
                     if NFT_Result.get("status") == "true":
                         db_sess = db_session.create_session()
@@ -408,13 +438,13 @@ def add():
                         return redirect('/add')
                 else:
                     NFT_Result = nftapi.CreateNFT(form3.title.data,
-                                           current_user.address,
-                                           form3.description.data,
-                                           "https://ipfs.io/ipfs/" + image_hash,
-                                           1,
-                                           form3.cost.data,
-                                           caty,
-                                           current_user.private_key)
+                                                  current_user.address,
+                                                  form3.description.data,
+                                                  "https://ipfs.io/ipfs/" + image_hash,
+                                                  1,
+                                                  form3.cost.data,
+                                                  caty,
+                                                  current_user.private_key)
                     print(NFT_Result)
                     if NFT_Result.get("status") == "true":
                         db_sess = db_session.create_session()
@@ -663,6 +693,7 @@ def reqister():
     return render_template('register.html', title='Регистрация', form=form,
                            form2=form2)
 
+
 @app.route('/admin/users', methods=['GET', 'POST'])
 def admin_users():
     if current_user.is_authenticated and current_user.role == "admin":
@@ -683,6 +714,7 @@ def admin_users():
                                form2=form2, role=current_user.role)
     else:
         return redirect("/")
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
