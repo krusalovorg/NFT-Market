@@ -11,6 +11,7 @@ app.use(jsonParser)
 app.use(urlencodedParser)
 
 app.use("/api", require("./api/create_nft"))
+app.use("/api", require("./api/info"))
 
 app.listen(port, () => {
   console.log(`Api server started on port ${port}`)

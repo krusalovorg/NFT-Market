@@ -8,6 +8,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, \
     current_user
 from wtforms.validators import DataRequired
 
+import nft.api
 from forms.search import SearchForm
 from forms.users import RegisterForm, LoginForm
 # from forms.settings import RedactForm
@@ -18,7 +19,7 @@ from data.nft import NFT
 from data.users import User
 from data.association import Association
 from data import db_session
-from nft.api import CreateNFT, GetNFTs, uploadImageNFT, getDataBlock, createEthAccount
+from nft.api import NFTApi
 
 # from forms.check import ChecksForm  # new
 
@@ -26,6 +27,11 @@ from nft.api import CreateNFT, GetNFTs, uploadImageNFT, getDataBlock, createEthA
 import sqlite3  # new!!!!!!!!!
 
 db = 'db/db.db'  # new !!!!!!!
+
+PASS = "NFTMarket123"
+marka = "NFTMarket"
+
+nftapi = NFTApi(PASS)
 
 UPLOAD_FOLDER = 'static/img/'
 
@@ -134,13 +140,18 @@ def func_run():
                 db_sess.commit()
     elif z == "remove_user":
         if current_user.is_authenticated and current_user.role == "admin":
-            print("delete user", x, y, z)
             db_sess = db_session.create_session()
             item = db_sess.query(User).filter(User.id == x).first()
             if item:
                 db_sess.delete(item)
 
                 db_sess.commit()
+    elif z == "get_private_key":
+        if current_user.is_authenticated:
+            return flask.jsonify(key=current_user.private_key)
+    elif z == "get_balance":
+        if current_user.is_authenticated:
+            return flask.jsonify(balance=nftapi.getBalance(current_user.address))
     elif z.startswith('sale'):
         if current_user.is_authenticated and current_user.role == "admin":
             print("add sale", x, y, z)
@@ -367,33 +378,61 @@ def add():
             filename = file.filename
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-            image_hash = uploadImageNFT("static/img/" + filename)
+            image_hash = nftapi.uploadImageNFT("static/img/" + filename)
             if image_hash:
-                NFT_Result = CreateNFT(form3.title.data,
-                                       "0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621",
-                                       form3.description.data,
-                                       "https://ipfs.io/ipfs/" + image_hash,
-                                       1,
-                                       form3.cost.data,
-                                       caty)
-                print(NFT_Result)
-                if NFT_Result.get("status") == "true":
-                    db_sess = db_session.create_session()
+                if current_user.role == "admin" and form3.createAsMarket == True:
+                    NFT_Result = nftapi.CreateMarketNFT(form3.title.data,
+                                           "0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621",
+                                           form3.description.data,
+                                           "https://ipfs.io/ipfs/" + image_hash,
+                                           1,
+                                           form3.cost.data,
+                                           caty)
+                    print(NFT_Result)
+                    if NFT_Result.get("status") == "true":
+                        db_sess = db_session.create_session()
 
-                    nft = NFT(title=form3.title.data,
-                              address="0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621",
-                              description=form3.description.data,
-                              image="https://ipfs.io/ipfs/" + image_hash,
-                              amount=1,
-                              cost=form3.cost.data,
-                              category=caty,
-                              rate=5,
-                              hash_block=NFT_Result.get("hash_block"))
+                        nft = NFT(title=form3.title.data,
+                                  address="0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621",
+                                  description=form3.description.data,
+                                  image="https://ipfs.io/ipfs/" + image_hash,
+                                  amount=1,
+                                  cost=form3.cost.data,
+                                  category=caty,
+                                  rate=5,
+                                  hash_block=NFT_Result.get("hash_block"))
 
-                    db_sess.add(nft)
-                    db_sess.commit()
+                        db_sess.add(nft)
+                        db_sess.commit()
 
-                    return redirect('/add')
+                        return redirect('/add')
+                else:
+                    NFT_Result = nftapi.CreateNFT(form3.title.data,
+                                           current_user.address,
+                                           form3.description.data,
+                                           "https://ipfs.io/ipfs/" + image_hash,
+                                           1,
+                                           form3.cost.data,
+                                           caty,
+                                           current_user.private_key)
+                    print(NFT_Result)
+                    if NFT_Result.get("status") == "true":
+                        db_sess = db_session.create_session()
+
+                        nft = NFT(title=form3.title.data,
+                                  address=current_user.address,
+                                  description=form3.description.data,
+                                  image="https://ipfs.io/ipfs/" + image_hash,
+                                  amount=1,
+                                  cost=form3.cost.data,
+                                  category=caty,
+                                  rate=5,
+                                  hash_block=NFT_Result.get("hash_block"))
+
+                        db_sess.add(nft)
+                        db_sess.commit()
+
+                        return redirect('/add')
 
         # if form3.validate_on_submit() and (
         #         (form3.category.data == "Выберети категорию" and form3.new_category.data != "") or (
@@ -426,7 +465,8 @@ def add():
         #     db_sess.commit()
         #     return redirect('/')
         return render_template('add.html', title='Добавление товара', form2=form2,
-                               form3=form3)
+                               form3=form3,
+                               gas=nftapi.getPriceGas())
     else:
         return redirect('/')
 

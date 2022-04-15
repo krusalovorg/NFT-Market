@@ -51,9 +51,14 @@
     </p>
     {% endfor %}
 
+    <p>{{ form3.createAsMarket() }} {{ form3.createAsMarket.label }}</p>
+
     <input type=file name=file class="form-control">
 
     <p>{{ form3.submit(type="submit", class="btn btn-primary") }}</p>
+
+    <p>{{ gas }}</p>
+
     {{ message }}
 </form>
 {% endblock %}

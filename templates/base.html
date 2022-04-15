@@ -26,6 +26,34 @@
             integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
             crossorigin="anonymous"></script>
     <title>{{title}}</title>
+    <script>
+    function get_balance() {
+        $.ajax({
+            url : "../func_run", // the endpoint
+            type : "GET", // http method
+            data : { par_1 : "",
+                     par_2 : "",
+                     par_3 : "get_balance" }, // data sent with the request
+            // for successful response
+            success : function(json) {
+                console.log("success", json); // another sanity check
+                $("#balance").text(json.balance+" eth");
+            },
+
+            // for non-successful response
+            error : function(xhr,errmsg,err) {
+                console.log(xhr.status + ": " + xhr.responseText); // provide info about the error to the console
+                }
+        });
+    };
+    window.onload = function() {
+       get_balance()
+    };
+
+    setInterval(() => {
+        get_balance()
+    }, 3000);
+    </script>
 </head>
 <body>
 
@@ -70,13 +98,17 @@
             </div>
 
             <div class="header-item-right">
-                {% if current_user.id == 1 %}
                 <a class="btn btn-primary" aria-current="page" href="/add">+</a>
-                {% endif %}
+                <a class="" style="min-width: 50px;" id="balance">
+                    loading
+                </a>
                 <ul style="list-style: none;margin-top: 1em;">
                     {% if current_user.is_authenticated %}
-                    <li class="menu-item"><a class="navbar-brand" href="/profile/{{current_user.name}}">{{
-                        current_user.name }}</a></li>
+                    <li class="menu-item">
+                        <a class="navbar-brand" href="/profile/{{current_user.name}}">
+                            {{ current_user.name }}
+                        </a>
+                    </li>
                     <!--                    <li class="menu-item"><a class="navbar-brand"><img height="30" width="30" src="static/icons/exit.svg" alt="Выход"></a></li>-->
                     {% else %}
                     <li class="menu-item"></li>

@@ -12,9 +12,15 @@ const alchemyWeb3 = createAlchemyWeb3(API_URL);
 const contract = require("../artifacts/contracts/OsunRiverNFT.sol/MarketNFT.json");
 const METAMASK_PUBLIC_KEY = process.env.METAMASK_PUBLIC_KEY;
 const METAMASK_PRIVATE_KEY = process.env.METAMASK_PRIVATE_KEY;
+const GAS = process.env.GAS;
 //const contractAddress = "0x68512832bDD76E93c421Ae2F2bBDeC9aF401bB44";
 
-module.exports = async function LoadNFT(tokenURI, newOwner) {
+module.exports = async function LoadNFT(tokenURI, newOwner, private_key) {
+
+  if (private_key == "market") {
+    private_key = METAMASK_PRIVATE_KEY
+  }
+
   const [deployer] = await ethers.getSigners();
   const acc_balance = await deployer.getBalance();
 
@@ -39,7 +45,7 @@ module.exports = async function LoadNFT(tokenURI, newOwner) {
   const nftContract = new alchemyWeb3.eth.Contract(contract.abi, contractAddress);  
 
   const nonce =
-  '0x' + (await alchemyWeb3.eth.getTransactionCount(METAMASK_PUBLIC_KEY) + 1).toString(16)
+  '0x' + (await alchemyWeb3.eth.getTransactionCount(newOwner) + 1).toString(16)
 
   /*const nonce = await alchemyWeb3.eth.getTransactionCount(
     METAMASK_PUBLIC_KEY,
@@ -47,10 +53,10 @@ module.exports = async function LoadNFT(tokenURI, newOwner) {
   );*/
 
   const tx = {
-    from: METAMASK_PUBLIC_KEY, // your metamask public key
+    from: newOwner, // your metamask public key
     to: contractAddress, // the smart contract address we want to interact with
     nonce: nonce, // nonce with the no of transactions from our account
-    gas: 2100000, // fee estimate to complete the transaction
+    gas: GAS, // fee estimate to complete the transaction
 
     data: nftContract.methods
       .createNFT(newOwner, tokenURI) // "0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621" - newOwner
@@ -59,7 +65,7 @@ module.exports = async function LoadNFT(tokenURI, newOwner) {
 
   const signPromise = alchemyWeb3.eth.accounts.signTransaction(
     tx,
-    METAMASK_PRIVATE_KEY
+    private_key
   );
   try {
     const result = await signPromise;

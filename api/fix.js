@@ -1,6 +1,6 @@
 const mintNFT = require('./scripts/mint-nft')
 
-mintNFT('0x4FD258d210b88F5a6d70191941BBf7e903540AAc',
+mintNFT('0xb09A98b93DbB627e16E8C875E452CcfB8Ac2A54F',
 'https://ipfs.io/ipfs/Qmbs9mANDvu7bs3Nw7aFMGxAnAPces5r1UazwpyhfePUqr',
 '0xd0047e035D8ba9B11f45Fa92bD4F474fa191e621')
 

@@ -5,51 +5,92 @@ from web3 import contract, Web3
 from eth_account import Account
 import secrets
 
+class NFTApi:
+    def __init__(self, password):
+        self.w3 = Web3(Web3.HTTPProvider("https://rinkeby.infura.io/v3/296ed10aa2eb4a80b0959f7cea646878"))
+        self.dir = os.path.abspath('.')
+        self.pass_ = password
 
-def CreateNFT(name, owner, description, image, amount, price, category):
-    req = requests.post("http://localhost:3000/api/create-nft", {
-        "name": name,
-        "owner": owner,
-        "description": description,
-        "image_link": image,
-        "amount": amount,
-        "price": price,
-        "category": category
-    })
-    return req.json()
+    def CreateNFT(self, name, owner, description, image, amount, price, category, private_key):
+        print(private_key)
+        req = requests.post("http://localhost:3000/api/create-nft", {
+            "name": name,
+            "owner": owner,
+            "description": description,
+            "image_link": image,
+            "amount": amount,
+            "price": price,
+            "category": category,
+            "password": self.pass_,
+            "private_key": private_key
+        })
+        return req.json()
+
+    def CreateMarketNFT(self, name, owner, description, image, amount, price, category):
+        req = requests.post("http://localhost:3000/api/create-nft", {
+            "name": name,
+            "owner": owner,
+            "description": description,
+            "image_link": image,
+            "amount": amount,
+            "price": price,
+            "category": category,
+            "password": self.pass_,
+            "private_key": self.pass_
+        })
+        return req.json()
+
+    def GetNFTs(self, owner):
+        return
 
 
-def GetNFTs(owner):
-    w3 = Web3(Web3.HTTPProvider("https://eth-rinkeby.alchemyapi.io/v2/iSm7xkVtMVgP85UJEvYOunFRFFmF9xdg"))
-    return
+    def uploadImageNFT(self, image_path):
+        ipfs_hash = subprocess.check_output(['node',self.dir+'\\nft\\image_to_pinata.js', image_path])
+        print("HASH:",ipfs_hash.decode())
+        return ipfs_hash.decode().strip()
 
-dir = os.path.abspath('.')
+    def getDataBlock(self, hash_block):
+        try:
+            block = self.w3.eth.get_transaction(hash_block)
+            print(block.input)
+            #contract_ = web3.contract.Contract("0x0000")
+            #data = contract_.decode_function_input(block.input)
+            return block.input
+        except web3.exceptions.BlockNotFound:
+            return None
 
-def uploadImageNFT(image_path):
-    api_key = "9b0fb64a7f4626d4381b"
-    api_secret = "b3b109e220885306edde3441c1b977bbbfe19871349af5435aa63475bb554d83"
-    jwt_token = "eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI3MzhmMTZjZi1kNGMyLTQxMmYtYTgyZC00MzNkYjc0YmE5YTEiLCJlbWFpbCI6ImtydXNhbG92cHJvQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiRlJBMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2V9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiI5YjBmYjY0YTdmNDYyNmQ0MzgxYiIsInNjb3BlZEtleVNlY3JldCI6ImIzYjEwOWUyMjA4ODUzMDZlZGRlMzQ0MWMxYjk3N2JiYmZlMTk4NzEzNDlhZjU0MzVhYTYzNDc1YmI1NTRkODMiLCJpYXQiOjE2NDk2OTIxNjV9.8jRdBvvlKJEzWzokvmBzvXO1LcJyWdSvY2bA_JjZd0M"
-    ipfs_hash = subprocess.check_output(['node',dir+'\\nft\\image_to_pinata.js', image_path])
-    print("HASH:",ipfs_hash.decode())
-    return ipfs_hash.decode().strip()
+    def getBalance(self, address):
+        try:
+            balance = self.w3.eth.getBalance(address)
+            return self.w3.fromWei(balance, 'Ether')
+        except web3.exceptions.BlockNotFound:
+            return None
 
-w3 = Web3(Web3.HTTPProvider("https://rinkeby.infura.io/v3/296ed10aa2eb4a80b0959f7cea646878"))
+    def getInfo(self):
+        try:
+            req = requests.post("http://localhost:3000/api/info", {
+                "password": self.pass_,
+            })
+            return req.json()
+        except:
+            return "Loading.."
 
-def getDataBlock(hash_block):
-    try:
-        block = w3.eth.get_transaction(hash_block)
-        print(block.input)
-        #contract_ = web3.contract.Contract("0x0000")
-        #data = contract_.decode_function_input(block.input)
-        return block.input
-    except web3.exceptions.BlockNotFound:
-        return None
+    def getPriceGas(self):
+        try:
+            gas = int(self.getInfo().get("gas") + "0000000000") #00000000000
+            gas = self.w3.fromWei(gas, 'Ether')
+            #100000000000000000
+            #2100000
+            print(gas)
+            return gas
+        except:
+            return "Loading.."
 
-def createEthAccount():
-    priv = secrets.token_hex(32)
-    private_key = "0x" + priv
-    acct = Account.from_key(private_key)
-    return private_key, acct.address
+    def createEthAccount(self):
+        priv = secrets.token_hex(32)
+        private_key = "0x" + priv
+        acct = Account.from_key(private_key)
+        return private_key, acct.address
 
 # def addMetadata(name, owner, description, image, amount, price, category, block_hash):
 #     db.insert({
