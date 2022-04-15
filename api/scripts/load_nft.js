@@ -14,14 +14,16 @@ const METAMASK_PUBLIC_KEY = process.env.METAMASK_PUBLIC_KEY;
 const METAMASK_PRIVATE_KEY = process.env.METAMASK_PRIVATE_KEY;
 const GAS = process.env.GAS;
 //const contractAddress = "0x68512832bDD76E93c421Ae2F2bBDeC9aF401bB44";
-
 module.exports = async function LoadNFT(tokenURI, newOwner, private_key) {
+  let [deployer] = await ethers.getSigners();
 
   if (private_key == "market") {
     private_key = METAMASK_PRIVATE_KEY
+  } else {
   }
+  let provider = ethers.getDefaultProvider('rinkeby');
+  deployer = new ethers.Wallet(private_key, provider);
 
-  const [deployer] = await ethers.getSigners();
   const acc_balance = await deployer.getBalance();
 
   console.log("Deploying contracts with the account:", deployer.address);
