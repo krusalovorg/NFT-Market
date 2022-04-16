@@ -1,36 +1,37 @@
 {% extends "base.html" %}
 
 {% block content %}
-<script type="text/javascript">
-    jQuery(function ($) {
-        function fix_size() {
-            var images = $('.img-container img');
-            images.each(setsize);
+<!--<script type="text/javascript">-->
+<!--    jQuery(function ($) {-->
+<!--        function fix_size() {-->
+<!--            var images = $('.img-container img');-->
+<!--            images.each(setsize);-->
 
-            function setsize() {
-                var img = $(this),
-                    img_dom = img.get(0),
-                    container = img.parents('.img-container');
-                if (img_dom.complete) {
-                    resize();
-                } else img.one('load', resize);
+<!--            function setsize() {-->
+<!--                var img = $(this),-->
+<!--                    img_dom = img.get(0),-->
+<!--                    container = img.parents('.img-container');-->
+<!--                if (img_dom.complete) {-->
+<!--                    resize();-->
+<!--                } else img.one('load', resize);-->
 
-                function resize() {
-                    if ((container.width() / container.height()) < (img_dom.width / img_dom.height)) {
-                        img.width('15vw');
-                        img.height('15vw');
-                        return;
-                    }
-                    img.height('15vw');
-                    img.width('15vw');
-                }
-            }
-        }
+<!--                function resize() {-->
+<!--                    if ((container.width() / container.height()) < (img_dom.width / img_dom.height)) {-->
+<!--                        img.width('100%');-->
+<!--                        img.height('25vw');-->
+<!--                        return;-->
+<!--                    }-->
+<!--                    img.height('25vw');-->
+<!--                    img.width('100%');-->
+<!--                }-->
+<!--            }-->
+<!--        }-->
 
-        $(window).on('resize', fix_size);
-        fix_size();
-    });
-</script>
+<!--        $(window).on('resize', fix_size);-->
+<!--        fix_size();-->
+<!--    });-->
+<!--</script>-->
+
 <div class="info-container">
     <div class="banner">
 
@@ -45,6 +46,7 @@
         <a class="btn-settings" href="/settings"><img height="30px" width="30px"
                                                       src="/static/icons/settings.svg"></a>
         {% endif %}
+
         <div class="profile-name">
             <h4>{{user[9]}}</h4>
         </div>

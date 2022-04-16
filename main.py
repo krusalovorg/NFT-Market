@@ -152,6 +152,30 @@ def func_run():
     elif z == "get_balance":
         if current_user.is_authenticated:
             return flask.jsonify(balance=nftapi.getBalance(current_user.address))
+
+    elif z.startswith('del_img'):
+        if z.split(' ')[-1] == '1':
+
+            con = sqlite3.connect(db)
+            cur = con.cursor()
+            oldfile = cur.execute("SELECT image FROM users WHERE id = ?", (current_user.id,)).fetchone()[0]
+            if oldfile:
+                cur.execute("UPDATE users SET image = NULL WHERE nickname = ?", (current_user.nickname,))
+                if os.path.exists(f'{oldfile}'):
+                    os.remove(oldfile)
+            con.commit()
+
+        if z.split(' ')[-1] == '2':
+
+            con = sqlite3.connect(db)
+            cur = con.cursor()
+            oldfile = cur.execute("SELECT banner FROM users WHERE id = ?", (current_user.id,)).fetchone()[0]
+            if oldfile:
+                cur.execute("UPDATE users SET banner = NULL WHERE nickname = ?", (current_user.nickname,))
+                if os.path.exists(f'{oldfile}'):
+                    os.remove(oldfile)
+            con.commit()
+
     elif z.startswith('sale'):
         if current_user.is_authenticated and current_user.role == "admin":
             print("add sale", x, y, z)
@@ -177,9 +201,9 @@ def func_run():
             db_sess.commit()
         else:
             db_sess = db_session.create_session()
-            a = db_sess.query(Association).filter(Association.user_id == int(str(current_user).split()[1]),
-                                                  Association.favs_id == int(x)).first()
-            db_sess.delete(a)
+            # a = db_sess.query(Association).filter(Association.user_id == int(str(current_user).split()[1]),
+            #                                       Association.favs_id == int(x)).first()
+            # db_sess.delete(a)
             db_sess.commit()
     return '', 204
 
@@ -236,8 +260,11 @@ def profile(r):
 
     con = sqlite3.connect(db)
     cur = con.cursor()
-    db_imgs = cur.execute("SELECT image, banner FROM users WHERE nickname = ?", (r,)).fetchall()[0]
-    print(db_imgs)
+    try:
+        db_imgs = cur.execute("SELECT image, banner FROM users WHERE nickname = ?", (r,)).fetchall()[0]
+    except IndexError as ie:
+        print(ie)
+        return redirect('/')
 
     if not os.path.exists(f'{db_imgs[0]}'):
         cur.execute("UPDATE users SET image = NULL WHERE nickname = ?", (r,))
@@ -245,7 +272,6 @@ def profile(r):
         cur.execute("UPDATE users SET banner = NULL WHERE nickname = ?", (r,))
 
     user = cur.execute("SELECT * FROM users WHERE nickname = ?", (r,)).fetchone()
-    print(user)
     con.commit()
 
     form = SearchForm()

@@ -4,21 +4,40 @@
 <script>
     function get_private_key() {
         $.ajax({
-            url : "../func_run", // the endpoint
-            type : "GET", // http method
-            data : { par_1 : "",
-                     par_2 : "",
-                     par_3 : "get_private_key" }, // data sent with the request
+            url: "../func_run", // the endpoint
+            type: "GET", // http method
+            data: {
+                par_1: "",
+                par_2: "",
+                par_3: "get_private_key"
+            }, // data sent with the request
             // for successful response
-            success : function(json) {
+            success: function (json) {
                 console.log("success", json); // another sanity check
                 $("#private_key").text(json.key);
             },
 
             // for non-successful response
-            error : function(xhr,errmsg,err) {
+            error: function (xhr, errmsg, err) {
                 console.log(xhr.status + ": " + xhr.responseText); // provide info about the error to the console
-                }
+            }
+        });
+    };
+
+    function del_image(id) {
+        $.ajax({
+            url: "../func_run", // the endpoint
+            type: "GET", // http method
+            data: {
+                par_1: "",
+                par_2: "",
+                par_3: `del_img ${id}`
+            }, // data sent with the request
+
+            // for non-successful response
+            error: function (xhr, errmsg, err) {
+                console.log(xhr.status + ": " + xhr.responseText); // provide info about the error to the console
+            }
         });
     };
 </script>
@@ -65,10 +84,16 @@
     {% endfor %}
 
     <h7>Фото профиля</h7>
-    <input type=file name=file class="form-control">
+    <div style="display: flex">
+        <button type="button" style="float:left;" class="btn btn-danger" onclick="del_image(1)">X</button>
+        <input type=file style="float: right" name=file class="form-control">
+    </div>
 
     <h7>Баннер профиля</h7>
-    <input type=file name=file2 class="form-control">
+    <div style="display: flex">
+        <button type="button" style="float:left;" class="btn btn-danger" onclick="del_image(2)">X</button>
+        <input type=file style="float: right" name=file2 class="form-control">
+    </div>
 
     <p>{{ form_red.submit(type="submit", class="btn btn-primary") }}</p>
 
