@@ -946,17 +946,21 @@ input:focus:not([type=submit]), textarea:focus {
     border-radius: 50%;
 }
 
-/*.banner-container {*/
-/*    !*display: inline-block;*!*/
-/*    border: 2px solid red;*/
-/*    position: relative;*/
-/*}*/
-
 .banner-container {
+    /*object-fit: cover;*/
+    /*display: flex;*/
+    /*position: relative;*/
     width: 100%;
     height: 100%;
-    object-fit: cover;
 }
+
+/*.banner-container {*/
+/*    left: 0;*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    border: 2px solid red;*/
+/*    object-fit: cover;*/
+/*}*/
 
 .profile .description {
     display: inline-block;
@@ -969,20 +973,20 @@ input:focus:not([type=submit]), textarea:focus {
     position: relative;
 }
 
-.profile-name {
-    left: 22vw;
-    top: 20vh;
-    z-index: 100;
-    margin-bottom: auto;
-    display: inline-block;
-    position: relative;
-}
+/*.profile-name {*/
+/*    left: 22vw;*/
+/*    top: 20vh;*/
+/*    z-index: 100;*/
+/*    border: 2px solid greenyellow;*/
+/*    margin-bottom: auto;*/
+/*    display: inline-block;*/
+/*    position: relative;*/
+/*}*/
 
 .desc-text {
     position: relative;
     display: block;
     color: #748288;
-    /*font-family: "Roboto Light";*/
 }
 
 .btn-profile {
@@ -997,7 +1001,6 @@ input:focus:not([type=submit]), textarea:focus {
 }
 
 .btn-check {
-    padding: 1000px;
     margin: auto;
     background-color: #3A89FF;
 
